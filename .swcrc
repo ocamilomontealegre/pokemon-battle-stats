@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/swcrc",
+  "sourceMaps": true,
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "decorators": true,
+      "dynamicImport": true
+    },
+    "baseUrl": "./",
+    "paths": {
+      "@app/*": ["src/app/*"],
+      "@common/*": ["src/common/*"],
+      "@health/*": ["src/health/*"],
+      "@router/*": ["src/router/*"]
+    },
+    "target": "esnext"
+  },
+  "module": {
+    "type": "es6",
+    "strict": true,
+    "resolveFully": true
+  },
+  "minify": true
+}
+

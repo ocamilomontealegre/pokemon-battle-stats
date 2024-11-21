@@ -1,0 +1,15 @@
+# Node
+node_modules/
+pnpm-lock.yaml
+bun.lockb
+
+# IDE
+.vscode/
+
+# Environment
+.env
+
+# Generated files
+dist/
+logs/
+coverage/
