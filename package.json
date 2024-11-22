@@ -78,6 +78,8 @@
     "http-status-codes": "2.3.0",
     "inversify": "^6.0.3",
     "inversify-express-utils": "^6.4.7",
+    "mongodb-memory-server": "10.1.2",
+    "mongoose": "8.8.2",
     "reflect-metadata": "^0.2.2",
     "tsx": "4.19.2",
     "winston": "^3.15.0",

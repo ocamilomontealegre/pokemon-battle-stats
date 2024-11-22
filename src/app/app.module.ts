@@ -1,5 +1,6 @@
 import { Container } from "inversify";
 import { HealthModule } from "@health/health.module";
+import { TrainerModule } from "@modules/trainer/trainer.module";
 import { AppRouter } from "./router/app.router";
 
 export class AppModule {
@@ -12,6 +13,7 @@ export class AppModule {
 
   private _initializeModules(): void {
     this._container.load(HealthModule);
+    this._container.load(TrainerModule);
     this._container.bind<AppRouter>(AppRouter).toSelf().inSingletonScope();
   }
 
@@ -19,3 +21,4 @@ export class AppModule {
     return this._container;
   }
 }
+

@@ -15,6 +15,7 @@
       "@app/*": ["src/app/*"],
       "@common/*": ["src/common/*"],
       "@health/*": ["src/health/*"],
+      "@modules/*": ["src/modules/*"],
       "@router/*": ["src/router/*"]
     },
     "resolveJsonModule": true,
