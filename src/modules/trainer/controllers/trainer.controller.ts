@@ -6,7 +6,7 @@ import { TrainerService } from "../services/trainer.service";
 // @ts-expect-error: HealthController is missing index signature for 'string'
 export class TrainerController implements Controller {
   public constructor(
-    @inject(TrainerService) private readonly _trainerService: TrainerService,
+    @inject(TrainerService) private readonly trainerService: TrainerService,
   ) {}
 }
 

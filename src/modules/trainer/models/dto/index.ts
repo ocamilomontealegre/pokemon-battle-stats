@@ -1,0 +1,2 @@
+export * from "./createTrainer.dto";
+
