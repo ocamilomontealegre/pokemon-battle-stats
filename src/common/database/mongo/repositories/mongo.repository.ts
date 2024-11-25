@@ -8,8 +8,8 @@ export class MongoRepository<T extends Document> {
     return (await document).save();
   }
 
-  public async find(): Promise<Array<T>> {
-    return this.documentModel.find().lean();
+  public async find(): Promise<T[]> {
+    return this.documentModel.find();
   }
 
   public async findById(id: string): Promise<T | null> {
