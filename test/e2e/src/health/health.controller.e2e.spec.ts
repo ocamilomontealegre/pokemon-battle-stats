@@ -6,12 +6,16 @@ import { appConfig, nodeConfig } from "@common/env";
 import { HTTPResponseModel } from "@common/models";
 import { HEALTH_MESSAGE } from "@health/models/constants";
 import type { Application } from "express";
+import { AppModule } from "@app/app.module";
 
 describe("HealthController E2E Tests", () => {
   let app: Application;
 
   beforeEach(async () => {
-    const appBuilder = new AppBuilder(nodeConfig, appConfig)
+    const appModule = new AppModule();
+    const appContainer = appModule.getContainer();
+
+    const appBuilder = new AppBuilder(nodeConfig, appConfig, appContainer)
       .useCors()
       .useJSonParser()
       .useHttpInterceptor()
@@ -37,3 +41,4 @@ describe("HealthController E2E Tests", () => {
     });
   });
 });
+
