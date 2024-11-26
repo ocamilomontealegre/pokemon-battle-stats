@@ -4,8 +4,7 @@ export class MongoRepository<T extends Document> {
   public constructor(private readonly documentModel: Model<T>) {}
 
   public async create(item: Partial<T>): Promise<T> {
-    const document = this.documentModel.create(item);
-    return (await document).save();
+    return this.documentModel.create(item);
   }
 
   public async find(): Promise<T[]> {

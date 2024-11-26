@@ -3,7 +3,6 @@ import { InversifyExpressServer } from "inversify-express-utils";
 import { serve, setup } from "swagger-ui-express";
 import cors from "cors";
 import helmet from "helmet";
-import { AppModule } from "@app/app.module";
 import { AppRouter } from "@app/router/app.router";
 import { HttpInterceptor } from "@common/interceptors";
 import { OpenAPIConfigurator } from "@common/open-api/open-api.config";
@@ -14,16 +13,16 @@ import type { appConfig, nodeConfig } from "@common/env";
 
 export class AppBuilder {
   private readonly _app: Application;
-  private readonly _appContainer: Container;
 
   public constructor(
     private readonly _nodeConfig: typeof nodeConfig,
     private readonly _appConfig: typeof appConfig,
+    private readonly _appContainer: Container,
   ) {
     this._app = express();
     this._nodeConfig = _nodeConfig;
     this._appConfig = _appConfig;
-    this._appContainer = new AppModule().getContainer();
+    this._appContainer = _appContainer;
   }
 
   public useJSonParser(): this {
@@ -79,3 +78,4 @@ export class AppBuilder {
     return this._app;
   }
 }
+
