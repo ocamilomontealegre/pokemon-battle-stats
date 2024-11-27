@@ -1,4 +1,4 @@
-import type { Document, Model } from "mongoose";
+import { Types, type Document, type Model } from "mongoose";
 
 export class MongoRepository<T extends Document> {
   public constructor(private readonly documentModel: Model<T>) {}
@@ -12,11 +12,11 @@ export class MongoRepository<T extends Document> {
   }
 
   public async findById(id: string): Promise<T | null> {
-    return this.documentModel.findById(id);
+    return this.documentModel.findById({ _id: new Types.ObjectId(id) });
   }
 
   public async update(id: string, item: Partial<T>): Promise<T | null> {
-    return this.documentModel.findOneAndUpdate({ id }, item, { new: true });
+    return this.documentModel.findOneAndUpdate({ _id: id }, item, { new: true });
   }
 
   public async delete(id: string): Promise<T | null> {

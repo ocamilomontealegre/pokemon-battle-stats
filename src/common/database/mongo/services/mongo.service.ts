@@ -1,19 +1,22 @@
 import { injectable } from "inversify";
 import { connect } from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
+import { Logger } from "@common/logger/logger.config";
 
 @injectable()
 export class MongoService {
-  private _mongoServer: MongoMemoryServer;
+  private mongoServer: MongoMemoryServer;
+  private readonly logger = new Logger(MongoService.name);
 
   private async _getConnectionUri(): Promise<string> {
-    this._mongoServer = await MongoMemoryServer.create();
-    return this._mongoServer.getUri();
+    this.mongoServer = await MongoMemoryServer.create();
+    return this.mongoServer.getUri();
   }
 
-  public async connect(): Promise<void> {
+  public async start(): Promise<void> {
     const uri = await this._getConnectionUri();
     connect(uri);
+    this.logger.info(`Successfully connected to ${uri}`);
   }
 }
 

@@ -20,7 +20,7 @@ export class AppModule {
 
   public async startAsyncServices(): Promise<void> {
     const mongoService = this._container.get<MongoService>(MongoService);
-    await mongoService.connect();
+    await mongoService.start();
   }
 
   public getContainer(): Container {
