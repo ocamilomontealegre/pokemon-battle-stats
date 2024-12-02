@@ -27,13 +27,13 @@ export class TrainerService {
   }
 
   public async update(id: string, trainer: UpdateTrainerDto): Promise<ITrainer> {
-    const result = await this.trainerRepository.update(id, trainer);
+    const result = await this.trainerRepository.findByIdAndUpdate(id, trainer);
     if (!result) throw new NotFoundException(`${Trainer.name} with id ${id} not found`);
     return result;
   }
 
   public async delete(id: string): Promise<ITrainer> {
-    const result = await this.trainerRepository.delete(id);
+    const result = await this.trainerRepository.findByIdAndDelete(id);
     if (!result) throw new NotFoundException(`${Trainer.name} with id ${id} not found`);
     return result;
   }
