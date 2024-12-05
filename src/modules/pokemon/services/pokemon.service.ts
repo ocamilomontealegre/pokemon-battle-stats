@@ -12,5 +12,9 @@ export class PokemonService {
   public async create(pokemon: CreatePokemonDto): Promise<IPokemon> {
     return this.pokemonRepository.create(pokemon);
   }
+
+  public async find(): Promise<IPokemon[]> {
+    return this.pokemonRepository.find({ options: { lean: true } });
+  }
 }
 

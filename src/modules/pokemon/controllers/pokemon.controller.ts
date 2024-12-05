@@ -1,5 +1,10 @@
 import { inject } from "inversify";
-import { controller, httpPost, type Controller } from "inversify-express-utils";
+import {
+  controller,
+  httpGet,
+  httpPost,
+  type Controller,
+} from "inversify-express-utils";
 import { PokemonService } from "../services/pokemon.service";
 import { CreatePokemonDto } from "../models/dto";
 import type { IPokemon } from "../models/schemas/pokemon.schema";
@@ -14,6 +19,11 @@ export class PokemonController implements Controller {
   @httpPost("/")
   public async create(pokemon: CreatePokemonDto): Promise<IPokemon> {
     return this.pokemonService.create(pokemon);
+  }
+
+  @httpGet("/")
+  public async find(): Promise<IPokemon[]> {
+    return this.pokemonService.find();
   }
 }
 
