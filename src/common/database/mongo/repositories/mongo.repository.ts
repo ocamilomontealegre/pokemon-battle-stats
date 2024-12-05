@@ -3,9 +3,11 @@ import {
   type Document,
   type FilterQuery,
   type Model,
+  type MongooseUpdateQueryOptions,
   type ProjectionType,
   type QueryOptions,
   type UpdateQuery,
+  type UpdateWriteOpResult,
 } from "mongoose";
 
 export class MongoRepository<T extends Document> {
@@ -67,13 +69,13 @@ export class MongoRepository<T extends Document> {
     return this.model.findOneAndUpdate(filter, updateData, queryOptions);
   }
 
-  // public async updateMany(
-  //   filter: FilterQuery<T>,
-  //   updateData: UpdateQuery<T>,
-  //   options: QueryOptions<T>,
-  // ) {
-  //   return this.model.updateMany();
-  // }
+  public async updateMany(
+    filter: FilterQuery<T>,
+    updateData: UpdateQuery<T>,
+    options: MongooseUpdateQueryOptions<T>,
+  ): Promise<UpdateWriteOpResult> {
+    return this.model.updateMany(filter, updateData, options);
+  }
 
   public async findByIdAndDelete(
     id: string,

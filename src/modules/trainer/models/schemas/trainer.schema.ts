@@ -6,7 +6,7 @@ export interface ITrainer extends Document {
   readonly region: string;
 }
 
-export const TrainerSchema = new Schema<ITrainer>(
+const TrainerSchema = new Schema<ITrainer>(
   {
     name: { type: String, required: true, unique: true },
     age: { type: Number, required: true },
