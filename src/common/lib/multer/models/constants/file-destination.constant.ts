@@ -1,2 +1,2 @@
-export const FILE_DESTINATION: string = "uploads";
+export const FILE_DESTINATION: string = "upload";
 
