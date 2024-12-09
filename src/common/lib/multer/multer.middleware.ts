@@ -3,7 +3,7 @@ import { BaseMiddleware } from "inversify-express-utils";
 import { HTTPException } from "@common/exceptions";
 import { multerConfig } from "./config/storage.config";
 import type { NextFunction, Request, Response } from "express";
-import type { Multer } from "multer";
+import { MulterError, type Multer } from "multer";
 
 @injectable()
 export class MulterMiddleware extends BaseMiddleware {
@@ -16,9 +16,10 @@ export class MulterMiddleware extends BaseMiddleware {
 
   public handler(req: Request, res: Response, next: NextFunction): void {
     this.upload.single("file")(req, res, (error) => {
-      if (error) {
-        return new HTTPException(500, "Error uploading file");
-      }
+      if (error instanceof MulterError)
+        return next(new HTTPException(500, error.message));
+
+      if (error) return next(new HTTPException(500, error.message));
       next();
     });
   }

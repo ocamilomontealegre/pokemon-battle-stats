@@ -1,7 +1,14 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
+import { EventEmitter } from "eventemitter3";
 
 @injectable()
 export class UploadService {
-  public process(): void {}
+  public constructor(
+    @inject(EventEmitter) private readonly eventEmitter: EventEmitter,
+  ) {}
+
+  public async processCsv(filePath: string, service: string): Promise<void> {
+    this.eventEmitter.emit(service, filePath);
+  }
 }
 

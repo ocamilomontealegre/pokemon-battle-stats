@@ -1,25 +1,28 @@
 import { inject } from "inversify";
-import {
-  BaseHttpController,
-  controller,
-  httpPost,
-  request,
-} from "inversify-express-utils";
+import { controller, httpPost, queryParam, request } from "inversify-express-utils";
+import { HTTPException } from "@common/exceptions";
 import { MulterMiddleware } from "@common/lib/multer/multer.middleware";
 import { UploadService } from "../services/upload.service";
+import { UPLOAD_ENDPOINT } from "../models/constants/upload-endpoint.constant";
+import type { Request } from "express";
+import type { GenericObject } from "@common/types";
 
-@controller("/")
-export class UploadController extends BaseHttpController {
+@controller(`/${UPLOAD_ENDPOINT}`)
+export class UploadController {
   public constructor(
     @inject(UploadService) private readonly uploadService: UploadService,
-  ) {
-    super();
-  }
+  ) {}
 
-  @httpPost("/", typeof MulterMiddleware)
-  public async upload(@request() req: Request): Promise<void> {
+  @httpPost("/", MulterMiddleware)
+  public async uploadCsv(
+    @request() req: Request,
+    @queryParam("service") service: string,
+  ): Promise<GenericObject> {
     const { file } = req;
-    return this.uploadService.process();
+    if (!file) throw new HTTPException(500, "File not uploaded");
+
+    await this.uploadService.processCsv(file.path, service);
+    return { upload: "success" };
   }
 }
 
