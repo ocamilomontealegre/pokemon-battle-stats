@@ -20,3 +20,5 @@ const PokemonSchema = new Schema<IPokemon>({
 
 export const Pokemon = model<IPokemon>("Pokemon", PokemonSchema);
 
+export const pokemonKeys = Object.keys(PokemonSchema.obj);
+
