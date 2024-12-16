@@ -1,7 +1,15 @@
 import { inject } from "inversify";
-import { controller, httpGet, httpPost } from "inversify-express-utils";
+import {
+  controller,
+  httpDelete,
+  httpGet,
+  httpPost,
+  httpPut,
+  requestBody,
+  requestParam,
+} from "inversify-express-utils";
 import { PokemonService } from "../services/pokemon.service";
-import { CreatePokemonDto } from "../models/dto";
+import { CreatePokemonDto, UpdatePokemonDto } from "../models/dto";
 import { POKEMON_ENDPOINT } from "../models/constants/pokemon-endpoint.constant";
 import type { IPokemon } from "../models/schemas/pokemon.schema";
 
@@ -12,13 +20,31 @@ export class PokemonController {
   ) {}
 
   @httpPost("/")
-  public async create(pokemon: CreatePokemonDto): Promise<IPokemon> {
-    return this.pokemonService.create(pokemon);
+  public async create(@requestBody() pokemonData: CreatePokemonDto): Promise<IPokemon> {
+    return this.pokemonService.create(pokemonData);
   }
 
   @httpGet("/")
   public async find(): Promise<IPokemon[]> {
     return this.pokemonService.find();
+  }
+
+  @httpGet("/strongest")
+  public async findStrongest(): Promise<IPokemon> {
+    return this.pokemonService.findStrongest();
+  }
+
+  @httpPut("/")
+  public async update(
+    @requestParam("id") id: string,
+    @requestBody() pokemonData: UpdatePokemonDto,
+  ): Promise<IPokemon> {
+    return this.pokemonService.updateById(id, pokemonData);
+  }
+
+  @httpDelete("/")
+  public async delete(@requestParam("id") id: string): Promise<IPokemon> {
+    return this.pokemonService.deleteById(id);
   }
 }
 

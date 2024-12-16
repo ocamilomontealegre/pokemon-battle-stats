@@ -39,7 +39,7 @@ export class TrainerService {
 
   public async update(id: string, trainer: UpdateTrainerDto): Promise<ITrainer> {
     const result = await this.trainerRepository.findByIdAndUpdate({
-      filter: { id },
+      id,
       updateData: trainer,
       projection: this.trainerProjection,
       options: this.queryOptions,

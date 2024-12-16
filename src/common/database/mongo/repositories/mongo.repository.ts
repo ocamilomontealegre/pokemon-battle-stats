@@ -4,13 +4,14 @@ import {
   type FilterQuery,
   type Model,
   type MongooseUpdateQueryOptions,
+  type PipelineStage,
   type ProjectionType,
   type QueryOptions,
   type UpdateQuery,
   type UpdateWriteOpResult,
 } from "mongoose";
 
-interface IUpdate<T> {
+interface IQueryParams<T> {
   filter: FilterQuery<T>;
   updateData: UpdateQuery<T>;
   projection?: ProjectionType<T>;
@@ -52,18 +53,30 @@ export class MongoRepository<T extends Document> {
     return this.model.findById({ _id: new Types.ObjectId(id) }, projection, options);
   }
 
-  public async findByIdAndUpdate({
+  public async findOneByQuery({
     filter,
+    projection,
+    options,
+  }: Omit<IQueryParams<T>, "updateData">): Promise<T | null> {
+    return this.model.findOne(filter, projection, options);
+  }
+
+  public async findByIdAndUpdate({
+    id,
     updateData,
     projection,
     options,
-  }: IUpdate<T>): Promise<T | null> {
+  }: Omit<IQueryParams<T>, "filter"> & { id: string }): Promise<T | null> {
     const queryOptions = {
       ...options,
       projection,
     };
 
-    return this.model.findByIdAndUpdate({ _id: filter }, updateData, queryOptions);
+    return this.model.findByIdAndUpdate(
+      { _id: new Types.ObjectId(id) },
+      updateData,
+      queryOptions,
+    );
   }
 
   public async findByQueryAndUpdate({
@@ -71,7 +84,7 @@ export class MongoRepository<T extends Document> {
     updateData,
     projection,
     options,
-  }: IUpdate<T>): Promise<T | null> {
+  }: IQueryParams<T>): Promise<T | null> {
     const queryOptions = {
       ...options,
       projection,
@@ -84,7 +97,7 @@ export class MongoRepository<T extends Document> {
     filter,
     updateData,
     options,
-  }: IUpdate<T>): Promise<UpdateWriteOpResult> {
+  }: IQueryParams<T>): Promise<UpdateWriteOpResult> {
     return this.model.updateMany(filter, updateData, options);
   }
 
@@ -120,6 +133,10 @@ export class MongoRepository<T extends Document> {
     };
 
     return this.model.findOneAndDelete(filter, queryOptions);
+  }
+
+  public async aggregate(pipeline: PipelineStage[]): Promise<T[]> {
+    return this.model.aggregate(pipeline);
   }
 }
 
