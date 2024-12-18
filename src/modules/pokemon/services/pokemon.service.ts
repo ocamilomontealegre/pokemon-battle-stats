@@ -6,9 +6,10 @@ import { FileUtils } from "@common/utils";
 import { Logger } from "@common/logger/logger.config";
 import { NotFoundException } from "@common/exceptions";
 import { PokemonRepository } from "../repositories/pokemon.repository";
-import { CreatePokemonDto, UpdatePokemonDto } from "../models/dto";
 import { strongestPokemonPipeline } from "../models/pipelines";
 import { pokemonKeys, type IPokemon } from "../models/schemas/pokemon.schema";
+import { CreatePokemonDto, UpdatePokemonDto } from "../models/dto";
+import { Types, type PipelineStage } from "mongoose";
 
 @injectable()
 export class PokemonService {
@@ -60,6 +61,25 @@ export class PokemonService {
 
   public async findStrongest(): Promise<IPokemon> {
     const [pokemon] = await this.pokemonRepository.aggregate(strongestPokemonPipeline);
+    if (!pokemon) throw new NotFoundException("Pokemon not found");
+    return pokemon;
+  }
+
+  public async findStrongestOne(pokemons: string[]): Promise<IPokemon> {
+    const pokemonIds = pokemons.map((pokemon) => new Types.ObjectId(pokemon));
+
+    const pipeline: PipelineStage[] = [
+      {
+        $match: {
+          _id: { $in: pokemonIds },
+        },
+      },
+    ];
+
+    const [pokemon] = await this.pokemonRepository.aggregate([
+      ...pipeline,
+      ...strongestPokemonPipeline,
+    ]);
     if (!pokemon) throw new NotFoundException("Pokemon not found");
     return pokemon;
   }

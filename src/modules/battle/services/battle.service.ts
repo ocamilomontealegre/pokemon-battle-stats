@@ -4,6 +4,7 @@ import { BattleRepository } from "../repositories/battle.repository";
 import { CreateBattleDto } from "../models/dto";
 import { UpdateBattleDto } from "../models/dto/update-battle.dto";
 import type { IBattle } from "../models/schemas/battle.schema";
+import { PokemonRepository } from "@modules/pokemon/repositories/pokemon.repository";
 
 @injectable()
 export class BattleService {
@@ -11,6 +12,7 @@ export class BattleService {
 
   public constructor(
     @inject(BattleRepository) private readonly battleRepository: BattleRepository,
+    @inject(PokemonRepository) private readonly pokemonRepository: PokemonRepository,
   ) {}
 
   public async create(battleData: CreateBattleDto): Promise<IBattle> {
