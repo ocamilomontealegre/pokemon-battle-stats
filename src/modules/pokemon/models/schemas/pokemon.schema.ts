@@ -9,14 +9,17 @@ export interface IPokemon extends Document {
   readonly defense: number;
 }
 
-const PokemonSchema = new Schema<IPokemon>({
-  name: { type: String, unique: true, required: true },
-  types: { type: [String], required: true },
-  level: { type: Number, required: true },
-  healthPoints: { type: Number, required: true },
-  attack: { type: Number, required: true },
-  defense: { type: Number, required: true },
-});
+const PokemonSchema = new Schema<IPokemon>(
+  {
+    name: { type: String, unique: true, required: true },
+    types: { type: [String], required: true },
+    level: { type: Number, required: true },
+    healthPoints: { type: Number, required: true },
+    attack: { type: Number, required: true },
+    defense: { type: Number, required: true },
+  },
+  { timestamps: true },
+);
 
 export const Pokemon = model<IPokemon>("Pokemon", PokemonSchema);
 
