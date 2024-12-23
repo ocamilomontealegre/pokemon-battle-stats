@@ -16,6 +16,13 @@ export class BattleService {
   ) {}
 
   public async create(battleData: CreateBattleDto): Promise<IBattle> {
+    const { participants, pokemons, result, winner } = battleData;
+
+    const existingPokemon = await this.pokemonRepository.find({
+      filter: { $in: pokemons },
+    });
+    console.log("🚀 ~ BattleService ~ create ~ existingPokemon:", existingPokemon);
+
     return this.battleRepository.create(battleData);
   }
 
