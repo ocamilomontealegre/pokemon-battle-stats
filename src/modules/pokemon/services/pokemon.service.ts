@@ -9,7 +9,7 @@ import { PokemonRepository } from "../repositories/pokemon.repository";
 import { strongestPokemonPipeline } from "../models/pipelines";
 import { pokemonKeys, type IPokemon } from "../models/schemas/pokemon.schema";
 import { CreatePokemonDto, UpdatePokemonDto } from "../models/dto";
-import { Types, type PipelineStage } from "mongoose";
+import { FilterQuery, Types, type PipelineStage } from "mongoose";
 
 @injectable()
 export class PokemonService {
@@ -41,13 +41,13 @@ export class PokemonService {
   }
 
   public async createMany(
-    pokemons: UpdatePokemonDto[],
+    pokemons: CreatePokemonDto[],
   ): Promise<Omit<Partial<IPokemon>, "_id">[]> {
     return this.pokemonRepository.createMany(pokemons);
   }
 
-  public async find(): Promise<IPokemon[]> {
-    return this.pokemonRepository.find({ options: this.queryOptions });
+  public async find(filter: FilterQuery<IPokemon> = {}): Promise<IPokemon[]> {
+    return this.pokemonRepository.find({ filter, options: this.queryOptions });
   }
 
   public async findById(id: string): Promise<IPokemon> {

@@ -15,7 +15,6 @@ import type { CreateTrainerDto, UpdateTrainerDto } from "../models/dto";
 import type { ITrainer } from "../models/schemas/trainer.schema";
 
 @controller(TRAINER_ENDPOINT)
-// @ts-expect-error: TrainerController is missing index signature for 'string'
 export class TrainerController implements Controller {
   public constructor(
     @inject(TrainerService) private readonly trainerService: TrainerService,

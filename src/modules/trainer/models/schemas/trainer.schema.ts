@@ -17,3 +17,5 @@ const TrainerSchema = new Schema<ITrainer>(
 
 export const Trainer = model<ITrainer>("Trainer", TrainerSchema);
 
+export const trainerKeys = Object.keys(TrainerSchema.obj);
+

@@ -1,10 +1,12 @@
 import { inject, injectable } from "inversify";
-import { NotFoundException } from "@common/exceptions";
+import { Types } from "mongoose";
+import { HTTPException, NotFoundException } from "@common/exceptions";
+import { PokemonService } from "@modules/pokemon/services/pokemon.service";
+import { TrainerService } from "@modules/trainer/services/trainer.service";
 import { BattleRepository } from "../repositories/battle.repository";
 import { CreateBattleDto } from "../models/dto";
 import { UpdateBattleDto } from "../models/dto/update-battle.dto";
 import type { IBattle } from "../models/schemas/battle.schema";
-import { PokemonRepository } from "@modules/pokemon/repositories/pokemon.repository";
 
 @injectable()
 export class BattleService {
@@ -12,18 +14,48 @@ export class BattleService {
 
   public constructor(
     @inject(BattleRepository) private readonly battleRepository: BattleRepository,
-    @inject(PokemonRepository) private readonly pokemonRepository: PokemonRepository,
+    @inject(TrainerService) private readonly trainerService: TrainerService,
+    @inject(PokemonService) private readonly pokemonService: PokemonService,
   ) {}
 
   public async create(battleData: CreateBattleDto): Promise<IBattle> {
-    const { participants, pokemons, result, winner } = battleData;
+    const { participants } = battleData;
 
-    const existingPokemon = await this.pokemonRepository.find({
-      filter: { $in: pokemons },
-    });
-    console.log("🚀 ~ BattleService ~ create ~ existingPokemon:", existingPokemon);
+    const trainers = await Promise.all(
+      participants.map(async (participant) => {
+        const result = await this.trainerService.getById(participant.id);
+        return result._id as Types.ObjectId;
+      }),
+    );
+    if (!trainers || trainers.length < 2)
+      throw new HTTPException(404, "Not enought valid trainers");
 
-    return this.battleRepository.create(battleData);
+    const pokemons = await Promise.all(
+      participants.map(async (participant) => {
+        const result = await this.pokemonService.findById(participant.pokemon);
+        return result._id as Types.ObjectId;
+      }),
+    );
+    if (!pokemons || pokemons.length < 2)
+      throw new HTTPException(404, "Not enought valid trainers");
+
+    const filteredPokemons = pokemons.map((pokemon) => pokemon.toString());
+    const strongestPokemon = await this.pokemonService.findStrongestOne(
+      filteredPokemons,
+    );
+
+    const winner = battleData.participants.find(
+      (participant) => participant.pokemon === String(strongestPokemon._id),
+    );
+
+    const battle = {
+      participants: trainers,
+      pokemons,
+      result: "OK",
+      winner: new Types.ObjectId(winner.id),
+    };
+
+    return this.battleRepository.create(battle);
   }
 
   public async get(): Promise<IBattle[]> {
